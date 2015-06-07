@@ -36,7 +36,22 @@ def generate_report(dist_matrix, pre_matrix):
       print "Distance : %s" % int(dist_matrix[i][j])
       print "\n"
 
+def generate_predecessors_matrix(input_matrix):
+  """
+  Return a matrix of predecessors
+  """
+  node_count = len(input_matrix)
 
+  pre_matrix = numpy.zeros( shape = (node_count, node_count))
+  #Initialize predecessor matrix
+  for i in range(0, node_count):
+    for j in range(0,node_count):
+      if not numpy.isinf(input_matrix[i][j]):
+        pre_matrix[i][j] = i
+      else:
+        pre_matrix[i][j] = numpy.inf
+
+  return pre_matrix
 
 def floyd_warshall(input_matrix):
   """
@@ -45,20 +60,14 @@ def floyd_warshall(input_matrix):
   node_count = len(input_matrix)
 
   dist_matrix = deepcopy(input_matrix) #Matrix storing results
-
-  pre_matrix = numpy.zeros( shape = (node_count, node_count) ) #Matrix storing predecessors
-  #Initialize predecessor matrix
-  for i in range(0, node_count):
-    for j in range(0,node_count):
-      if not numpy.isinf(dist_matrix[i][j]):
-        pre_matrix[i][j] = i
-      else:
-        pre_matrix[i][j] = numpy.inf
+  pre_matrix = generate_predecessors_matrix(input_matrix) #Matrix storing predecessors
 
   for intermediate in range(0, node_count): #Pick a node that will be tested as intermediary position
     for origin in range(0, node_count): #pick origin
       for dest in range(0, node_count): #and destination
+
         alternative_dist = dist_matrix[origin][intermediate] + dist_matrix[intermediate][dest]
+
         if alternative_dist < dist_matrix[origin][dest]:
           #check for absorbing path
           if origin == dest:
