@@ -5,6 +5,7 @@ import numpy
 def get_path(pre_matrix, origin, dest):
   """
   Reconstruct shortest path from origin to destination using the predecessor matrix passed as input
+  This method is not recursive to avoid reach  of call stack limit when input is a large matrix
   """
   path_list = [origin]
 
